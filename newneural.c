@@ -146,15 +146,26 @@ int NeuralNet_update(NeuralNet *net){
 		node_output_count = node->output_count;
 		//printf("Now updating node %d\n",i);
 		//Scan through the node's inputs
-		node->value = 0;
 			for(j=0;j<node_input_count;j++){
 				conn = node->inputs[j];
 				node->value += conn->value * conn->gain;
+				if(node->value > 255){
+					node->value = 255;
+				}
+				if(node->value < -255){
+					node->value = 255;
+				}
 				//printf("Node %d's value is now %f using input %d\n",i, node->value, j);
 			}
 			for(j=0;j<node_output_count;j++){
 				conn = node->outputs[j];
 				conn->value = node->value;
+				if(conn->value > 255){
+					conn->value = 255;
+				}
+				if(conn->value < -255){
+					conn->value = 255;
+				}
 				//printf("Node %d's value transferred to output %d with value %f\n",i,j,conn->value);
 			}
 		}
